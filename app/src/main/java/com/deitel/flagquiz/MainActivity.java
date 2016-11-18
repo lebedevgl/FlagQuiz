@@ -43,7 +43,10 @@ public class MainActivity extends AppCompatActivity {
         if (preferencesChanged) {
             MainActivityFragment quizFragment = (MainActivityFragment)
                     getSupportFragmentManager().findFragmentById(R.id.quizFragment);
-            // quizFragment
+            quizFragment.updateGuessRows(PreferenceManager.getDefaultSharedPreferences(this));
+            quizFragment.updateRegions(PreferenceManager.getDefaultSharedPreferences(this));
+            quizFragment.resetQuiz();
+            preferencesChanged = false;
         }
     }
 
