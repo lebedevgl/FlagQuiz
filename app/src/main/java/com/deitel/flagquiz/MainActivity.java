@@ -1,5 +1,8 @@
 package com.deitel.flagquiz;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -9,6 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     private static final String CHOICES = "pref_numberOfChoices";
@@ -25,7 +30,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-        // PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(preferencesChangeListener);
+        PreferenceManager.getDefaultSharedPreferences(this).
+                registerOnSharedPreferenceChangeListener(preferencesChangeListener);
+
         int screenSize = getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK;
         if (screenSize == Configuration.SCREENLAYOUT_SIZE_LARGE ||
@@ -52,23 +59,47 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        int orientation = getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            getMenuInflater().inflate(R.menu.menu_main, menu);
+            return true;
+        } else
+            return false;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
+        Intent preferencesIntent = new Intent(this, SettingsActivity.class);
+        startActivity(preferencesIntent);
         return super.onOptionsItemSelected(item);
     }
+
+    private OnSharedPreferenceChangeListener preferencesChangeListener =
+            new OnSharedPreferenceChangeListener() {
+                @Override
+                public void onSharedPreferenceChanged(
+                        SharedPreferences sharedPreferences, String key) {
+                    preferencesChanged = true;
+                    MainActivityFragment quizFragment = (MainActivityFragment)
+                            getSupportFragmentManager().findFragmentById(R.id.quizFragment);
+
+                    if (key.equals(CHOICES)) {
+                        quizFragment.updateGuessRows(sharedPreferences);
+                        quizFragment.resetQuiz();
+                    }
+                    else if (key.equals(REGIONS)) {
+                        Set<String> regions =
+                                sharedPreferences.getStringSet(REGIONS, null);
+                        if (regions != null && regions.size() > 0) {
+                            quizFragment.updateRegions(sharedPreferences);
+                            quizFragment.resetQuiz();
+                        }
+                        else {
+
+                        }
+                    }
+
+                }
+
+            };
 }
