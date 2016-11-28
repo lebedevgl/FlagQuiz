@@ -16,8 +16,8 @@ import android.widget.Toast;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String CHOICES = "pref_numberOfChoices";
-    private static final String REGIONS = "pref_regionsToInclude";
+    public static final String CHOICES = "pref_numberOfChoices";
+    public static final String REGIONS = "pref_regionsToInclude";
 
     private boolean phoneDevice = true;
     private boolean preferencesChanged = true;
