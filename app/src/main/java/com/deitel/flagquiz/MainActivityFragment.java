@@ -80,6 +80,7 @@ public class MainActivityFragment extends Fragment {
         guessLinearLayouts[1] = (LinearLayout) view.findViewById(R.id.row2LinearLayout);
         guessLinearLayouts[2] = (LinearLayout) view.findViewById(R.id.row3LinearLayout);
         guessLinearLayouts[3] = (LinearLayout) view.findViewById(R.id.row4LinearLayout);
+        answerTextView = (TextView)view.findViewById(R.id.answerTextView);
 
         for (LinearLayout row : guessLinearLayouts) {
             for (int column = 0; column < row.getChildCount(); column++) {
@@ -155,6 +156,7 @@ public class MainActivityFragment extends Fragment {
         try (InputStream stream = assets.open(region + "/" + nextImage + ".png")) {
             Drawable flag = Drawable.createFromStream(stream, nextImage);
             flagImageView.setImageDrawable(flag);
+            animate(false);
         } catch (IOException exception) {
             Log.e(TAG, "Error loading " + nextImage, exception);
         }
@@ -231,7 +233,7 @@ public class MainActivityFragment extends Fragment {
                 answerTextView.setTextColor(getResources().getColor(R.color.correct_answer,
                         getContext().getTheme()));
 
-                // disableButtons();
+                disableButtons();
 
                 if (correctAnswers == FLAGS_IN_QUIZ) {
                     DialogFragment quizResults = new DialogFragment() {
@@ -240,8 +242,7 @@ public class MainActivityFragment extends Fragment {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             builder.setMessage(getString(R.string.results, totalGuesses, (1000 / (double) totalGuesses)));
                             builder.setPositiveButton(R.string.reset_quiz, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
+                                        public void onClick(DialogInterface dialog, int id) {
                                             resetQuiz();
                                         }
                                     }
@@ -271,5 +272,13 @@ public class MainActivityFragment extends Fragment {
         }
     };
 
+    private void disableButtons() {
+        for(int row = 0; row < guessRows; row++) {
+            LinearLayout guessRow = guessLinearLayouts[row];
+            for(int i = 0; i < guessRow.getChildCount(); i++) {
+                guessRow.getChildAt(i).setEnabled(false);
+            }
+        }
+    }
 
 }
