@@ -33,13 +33,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class MainActivityFragment extends Fragment {
 
     private static final String TAG = "FlagQuiz Activity";
-    private static final int FLAGS_IN_QUIZ = 3;
+    private static final int FLAGS_IN_QUIZ = 2;
 
     private List<String> fileNameList;
     private List<String> quizCountriesList;
@@ -57,7 +54,6 @@ public class MainActivityFragment extends Fragment {
     private ImageView flagImageView;
     private LinearLayout[] guessLinearLayouts;
     private TextView answerTextView;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,7 +77,7 @@ public class MainActivityFragment extends Fragment {
         guessLinearLayouts[1] = (LinearLayout) view.findViewById(R.id.row2LinearLayout);
         guessLinearLayouts[2] = (LinearLayout) view.findViewById(R.id.row3LinearLayout);
         guessLinearLayouts[3] = (LinearLayout) view.findViewById(R.id.row4LinearLayout);
-        answerTextView = (TextView)view.findViewById(R.id.answerTextView);
+        answerTextView = (TextView) view.findViewById(R.id.answerTextView);
 
         for (LinearLayout row : guessLinearLayouts) {
             for (int column = 0; column < row.getChildCount(); column++) {
@@ -194,11 +190,16 @@ public class MainActivityFragment extends Fragment {
     private void animate(boolean animateOut) {
         if (correctAnswers == 0)
             return;
-        int centerX = (quizLinearLayout.getLeft() + quizLinearLayout.getRight()) / 2;
-        int centerY = (quizLinearLayout.getTop() + quizLinearLayout.getBottom()) / 2;
+        int centerX = (quizLinearLayout.getLeft() +
+                quizLinearLayout.getRight()) / 2;
+        int centerY = (quizLinearLayout.getTop() +
+                quizLinearLayout.getBottom()) / 2;
 
-        int radius = Math.max(quizLinearLayout.getWidth(), quizLinearLayout.getHeight());
+        int radius = Math.max(quizLinearLayout.getWidth(),
+                quizLinearLayout.getHeight());
+
         Animator animator;
+
         if (animateOut) {
             animator = ViewAnimationUtils.createCircularReveal(
                     quizLinearLayout, centerX, centerY, radius, 0);
@@ -210,8 +211,7 @@ public class MainActivityFragment extends Fragment {
                         }
                     }
             );
-        }
-        else {
+        } else {
             animator = ViewAnimationUtils.createCircularReveal(
                     quizLinearLayout, centerX, centerY, 0, radius);
         }
@@ -237,20 +237,28 @@ public class MainActivityFragment extends Fragment {
                 disableButtons();
 
                 if (correctAnswers == FLAGS_IN_QUIZ) {
-                    DialogFragment quizResults = new DialogFragment() {
-                        @Override
-                        public Dialog onCreateDialog(Bundle bundle) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setMessage(getString(R.string.results, totalGuesses, (1000 / (double) totalGuesses)));
-                            builder.setPositiveButton(R.string.reset_quiz, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            resetQuiz();
-                                        }
-                                    }
-                            );
-                            return builder.create();
-                        }
-                    };
+                    DialogFragment quizResults =
+                            new DialogFragment() {
+                                @Override
+                                public Dialog onCreateDialog(Bundle bundle) {
+                                    AlertDialog.Builder builder =
+                                            new AlertDialog.Builder(getActivity());
+                                    builder.setMessage(
+                                            getString(R.string.results,
+                                                    totalGuesses,
+                                                    (1000 / (double) totalGuesses)));
+
+                                    builder.setPositiveButton(R.string.reset_quiz,
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog,
+                                                                    int id) {
+                                                    resetQuiz();
+                                                }
+                                            }
+                                    );
+                                    return builder.create();
+                                }
+                            };
                     quizResults.setCancelable(false);
                     quizResults.show(getFragmentManager(), "quiz results");
                 }
@@ -274,9 +282,9 @@ public class MainActivityFragment extends Fragment {
     };
 
     private void disableButtons() {
-        for(int row = 0; row < guessRows; row++) {
+        for (int row = 0; row < guessRows; row++) {
             LinearLayout guessRow = guessLinearLayouts[row];
-            for(int i = 0; i < guessRow.getChildCount(); i++) {
+            for (int i = 0; i < guessRow.getChildCount(); i++) {
                 guessRow.getChildAt(i).setEnabled(false);
             }
         }
