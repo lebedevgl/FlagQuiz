@@ -39,7 +39,7 @@ import java.util.Set;
 public class MainActivityFragment extends Fragment {
 
     private static final String TAG = "FlagQuiz Activity";
-    private static final int FLAGS_IN_QUIZ = 10;
+    private static final int FLAGS_IN_QUIZ = 3;
 
     private List<String> fileNameList;
     private List<String> quizCountriesList;
@@ -57,6 +57,7 @@ public class MainActivityFragment extends Fragment {
     private ImageView flagImageView;
     private LinearLayout[] guessLinearLayouts;
     private TextView answerTextView;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -265,8 +266,8 @@ public class MainActivityFragment extends Fragment {
             else {
                 flagImageView.startAnimation(shakeAnimation);
                 answerTextView.setText(R.string.incorrect_answer);
-                answerTextView.setTextColor(getResources().getColor(R.color.incorrect_answer,
-                        getContext().getTheme()));
+                answerTextView.setTextColor(getResources().getColor(
+                        R.color.incorrect_answer, getContext().getTheme()));
                 guessButton.setEnabled(false);
             }
         }
